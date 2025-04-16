@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <h:head>
+        <title>View Grades</title>
+       
+         <h:outputStylesheet library="css" name="style.css"/>
+    </h:head>
+    <body>
+        
+        <div class="container">
+           <!-- Grades Table -->
+            <div class="section">
+                <h2>All Grades</h2>
+                <h:panelGroup id="gradeTable">
+                    <h:dataTable value="#{enrollmentBean.enrollments}" var="enrollment" style="margin-top:15px; width:100%;">
+                        <h:column>
+                            <f:facet name="header">Enrollment ID</f:facet>
+                            #{enrollment.id}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Student Name</f:facet>
+                            #{enrollment.student.firstName} #{enrollment.student.lastName}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Course Name</f:facet>
+                            #{enrollment.course.courseName}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Grade</f:facet>
+                            #{enrollment.grade}
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </div>
+        </div>
+        
+    </body>
+</html>

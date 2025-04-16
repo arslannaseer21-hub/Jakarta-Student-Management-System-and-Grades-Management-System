@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Grade Management</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+
+<h:body>
+    <h:form id="gradeForm">
+
+        <h:messages globalOnly="true" layout="table"
+                    infoClass="info-message"
+                    errorClass="error-message"
+                    warnClass="warn-message" />
+
+        <div class="container">
+            <div class="section">
+                <h2>Assign Grade</h2>
+
+                <!-- Dropdown to select Enrollment (Student + Course) -->
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="enrollmentSelect" value="Select Enrollment:" />
+                    <h:selectOneMenu id="enrollmentSelect" value="#{enrollmentBean.selectedEnrollmentId}" required="true">
+                        <f:selectItem itemLabel="-- Select Enrollment --" itemValue="#{null}" />
+                        <f:selectItems value="#{enrollmentBean.enrollments}" var="enroll"
+                                       itemLabel="#{enroll.student.firstName} #{enroll.student.lastName} - #{enroll.course.courseName}"
+                                       itemValue="#{enroll.id}" />
+                    </h:selectOneMenu>
+
+                    <h:outputLabel for="gradeInput" value="Grade:" />
+                    <h:inputText id="gradeInput" value="#{enrollmentBean.grade}" required="true"/>
+                </h:panelGrid>
+
+                <!-- Assign Grade Button -->
+                <div style="text-align:center; margin-top:10px;">
+                    <h:commandButton value="Assign Grade" action="#{enrollmentBean.assignGrade}" styleClass="btn btn-success">
+                        <f:ajax execute="@form" render="@form"/>
+                    </h:commandButton>
+                </div>
+            </div>
+
+            <!-- Grades Table -->
+            <div class="section">
+                <h2>All Grades</h2>
+                <h:panelGroup id="gradeTable">
+                    <h:dataTable value="#{enrollmentBean.enrollments}" var="enrollment" style="margin-top:15px; width:100%;">
+                        <h:column>
+                            <f:facet name="header">Enrollment ID</f:facet>
+                            #{enrollment.id}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Student Name</f:facet>
+                            #{enrollment.student.firstName} #{enrollment.student.lastName}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Course Name</f:facet>
+                            #{enrollment.course.courseName}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Grade</f:facet>
+                            #{enrollment.grade}
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </div>
+        </div>
+
+    </h:form>
+</h:body>
+</html>

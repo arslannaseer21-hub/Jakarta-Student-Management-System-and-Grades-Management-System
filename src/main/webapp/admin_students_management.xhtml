@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Admin - Student Management</title>
+   
+
+    <script>
+        function showEditModal() {
+            document.getElementById("editStudentModal").style.display = "block";
+        }
+        function closeEditModal() {
+            document.getElementById("editStudentModal").style.display = "none";
+        }
+    </script>
+    
+    <h:outputStylesheet library="css" name="style.css"/>
+
+</h:head>
+
+<h:body>
+    <h:form id="mainForm">
+        <div class="container">
+            <!-- Insert New Student -->
+            <div class="section">
+                <h2>Add New Student</h2>
+                 <h:messages layout="list" styleClass="error-message"/>
+                <h:panelGrid columns="2" >
+                    <h:outputLabel for="first" value="First Name:"/>
+                    <h:inputText id="first" value="#{studentBean.newStudent.firstName}" required="true"/>
+                 
+                    <h:outputLabel for="last" value="Last Name:"/>
+                    <h:inputText id="last" value="#{studentBean.newStudent.lastName}" required="true"/>
+                   
+
+                    <h:outputLabel for="email" value="Email:"/>
+                    <h:inputText id="email" value="#{studentBean.newStudent.email}" required="true"/>
+                 
+
+                   
+                   
+                </h:panelGrid>
+                 
+                     <!-- Add Button for Student -->
+                 <div style="text-align:center;">
+                  <h:commandButton value="Add Student" action="#{studentBean.addStudent}" styleClass="btn btn-success">
+                        <f:ajax execute="@form" render="@form"/>
+                  </h:commandButton></div>
+            </div>
+
+            <!-- Search Student -->
+            <div class="section">
+                <h2>Search Student</h2>
+                <h:panelGrid columns="3" cellpadding="5" style="width:100%">
+                    <h:outputLabel for="searchField" value="Search by Name/ID:"/>
+                    <h:inputText id="searchField" value="#{studentBean.searchQuery}"/>
+                    <h:commandButton value="Search" action="#{studentBean.searchStudents}" styleClass="btn btn-secondary">
+                        <f:ajax execute="searchField" render="studentsTable"/>
+                    </h:commandButton>
+                </h:panelGrid>
+
+                <h:panelGroup id="studentsTable">
+                    <h:dataTable value="#{studentBean.students}" var="student"
+                                 style="margin-top:15px; width:100%;">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{student.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">First Name</f:facet>
+                            #{student.firstName}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Last Name</f:facet>
+                            #{student.lastName}
+                        </h:column>
+                       
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+
+                            <h:commandButton value="Edit" styleClass="btn btn-warning"
+                                             action="#{studentBean.prepareEdit(student)}">
+                                <f:ajax execute="@this" render="editStudentForm" onevent="function(data) { if (data.status === 'success') showEditModal(); }"/>
+                            </h:commandButton>
+
+                            <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             action="#{studentBean.deleteStudent(student.id)}"
+                                             onclick="return confirm('Are you sure?');">
+                                <f:ajax execute="@this" render="@form:studentsTable"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </div>
+        </div>
+    </h:form>
+
+    <!-- Edit Modal -->
+    <div id="editStudentModal">
+        <h2>Edit Student</h2>
+        <h:form id="editStudentForm">
+            <h:inputHidden value="#{studentBean.selectedStudent.id}"/>
+
+            <h:outputLabel for="editFirst" value="First Name:"/>
+            <h:inputText id="editFirst" value="#{studentBean.selectedStudent.firstName}" style="width:100%;" required="true"/>
+            <h:message for="editFirst" styleClass="error-message"/>
+
+            <h:outputLabel for="editLast" value="Last Name:"/>
+            <h:inputText id="editLast" value="#{studentBean.selectedStudent.lastName}" style="width:100%;" required="true"/>
+            <h:message for="editLast" styleClass="error-message"/>
+
+            <h:outputLabel for="editEmail" value="Email:"/>
+            <h:inputText id="editEmail" value="#{studentBean.selectedStudent.email}" style="width:100%;" required="true"/>
+            <h:message for="editEmail" styleClass="error-message"/>
+
+            <div style="margin-top:10px;">
+                <h:commandButton value="Save Changes" action="#{studentBean.saveStudent}" styleClass="btn btn-success">
+                    <f:ajax execute="@editStudentForm" render="studentsTable" onevent="closeEditModal();"/>
+                </h:commandButton>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal();">Cancel</button>
+            </div>
+        </h:form>
+    </div>
+
+    <h:messages globalOnly="true" layout="table" styleClass="error-message" />
+</h:body>
+</html>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Course Management</title>
+       
+         <h:outputStylesheet library="css" name="style.css"/>
+    </h:head>
+    <body>
+        <h:form id="mainForm">
+                  <h:messages globalOnly="true" layout="table" 
+            infoClass="info-message" errorClass="error-message" warnClass="warn-message" />
+
+           <div class="container">                
+                <!--add course -->
+                <div class="section">
+                    <h2>Add New Course</h2>
+                    <h:panelGrid columns="2">
+    
+                        <h:outputLabel for="courseName" value="Course Name"/>
+                        <h:inputText id="courseName" value="#{courseBean.newCourse.courseName}" required="true"/>
+                      
+                        
+                    <h:outputLabel for="courseCode" value="Course Code"/>
+                    <h:inputText id="courseCode" value="#{courseBean.newCourse.courseCode}" required="true"/>
+                       
+                        
+                    </h:panelGrid>
+                    <div style="text-align:center;">
+                        <h:commandButton value="Add Course" action="#{courseBean.addCourse}"  styleClass="btn btn-success">
+                            <f:ajax execute="courseName courseCode" render="@form"/>
+                        </h:commandButton>
+                      <h:message for="courseName" styleClass="error-message"/>
+                        <h:message for="courseCode" styleClass="error-message"/>
+                        
+                    </div>
+                    
+                    
+                    
+                    
+                      <h2>All Courses</h2>
+                        <h:panelGroup id="courseTable">
+                            <h:dataTable value="#{courseBean.courses}"  var="course"  style="margin-top:15px; width:100%;">
+                                <h:column>
+                                    <f:facet name="header">ID</f:facet>
+                                      #{course.id}
+                                </h:column>
+                                
+                                <h:column>
+                                    <f:facet name="header">Course Name</f:facet>
+                                    #{course.courseName}
+                                </h:column>
+                                
+                                <h:column>
+                                    <f:facet name="header">Course Code</f:facet>
+                                    #{course.courseCode}
+                                </h:column>
+                            </h:dataTable>
+                        </h:panelGroup>
+                        
+                        
+                    
+                    
+                    
+                    
+                    
+                    
+                  
+             
+             
+
+                </div>
+                    
+                    <!-- All Courses All Enrollments-->
+                    
+                    <div class="section">
+                        
+                              
+                  <!-- Enrollment -->
+                <h2>Enrollment</h2>
+                <h:panelGrid columns="1" style="margin-top:10px;">
+                    <!-- Student Table -->
+                   
+                <h:panelGrid columns="3" cellpadding="5" style="width:100%">
+                    <h:outputLabel for="searchField" value="Search by Name/ID:"/>
+                    <h:inputText id="searchField" value="#{enrollmentBean.searchQuery}"/>
+                    <h:commandButton value="Search" action="#{enrollmentBean.searchStudents}" styleClass="btn btn-secondary">
+                        <f:ajax execute="searchField" render="@form:studentTable"/>
+                    </h:commandButton>
+                </h:panelGrid>
+
+                <h:panelGroup id="studentTable">
+                    <h:dataTable value="#{enrollmentBean.students}" var="student"
+                                 style="margin-top:15px; width:100%;">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{student.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">First Name</f:facet>
+                            #{student.firstName}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Last Name</f:facet>
+                            #{student.lastName}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Email</f:facet>
+                            #{student.email}
+                        </h:column>
+                      <h:column>
+                            <f:facet name="header">Select</f:facet>
+                            <h:commandButton value="#{enrollmentBean.selectButtonText}" action="#{enrollmentBean.selectStudent(student)}" disabled="#{enrollmentBean.disable}" styleClass="btn btn-primary">
+                                <f:ajax execute="@this" render="@form:studentTable"/></h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+          
+                    
+                    
+                    
+                    
+                    
+                    
+
+                    <!-- Course Dropdown -->
+                      <h:selectOneMenu id="courseSelect" value="#{enrollmentBean.selectedCourse.id}" required="true">
+                       <f:selectItem itemLabel="-- Select Course --" itemValue="#{null}" />
+                          <f:selectItems value="#{courseBean.courses}" var="course" itemLabel="#{course.courseName}" itemValue="#{course.id}" />
+                       </h:selectOneMenu>
+
+                </h:panelGrid>
+                
+            
+
+                <!-- Enroll Button -->
+                <div style="text-align:center; margin-top:10px;">
+                    <h:commandButton value="Enroll" action="#{enrollmentBean.enrollStudent}" styleClass="btn btn-success">
+                        <f:ajax execute="courseSelect" render="@form:enrollmentTable" />
+                    </h:commandButton>
+                </div>
+                
+                        
+                        
+                        
+                        
+                        
+                        
+                      <!--Enrollment table-->  
+                      
+                        <h2>Enrollment</h2>
+                        
+                        
+                        
+                 
+                        
+                        
+                        <h:panelGroup id="enrollmentTable">
+                                 <h:messages globalOnly="true" layout="table" 
+            infoClass="info-message" errorClass="error-message" warnClass="warn-message" />
+
+                           <h:dataTable value="#{enrollmentBean.enrollments}" var="enrollment" style="margin-top:15px; width:100%;">
+                              <h:column>
+                               <f:facet name="header">Enrollment ID</f:facet>
+                                 #{enrollment.id}
+                             </h:column>
+                          <h:column>
+                          <f:facet name="header">Course Name</f:facet>
+                              #{enrollment.course.courseName}
+                         </h:column>
+                        <h:column>
+                       <f:facet name="header">Student Name</f:facet>
+                           #{enrollment.student.firstName} #{enrollment.student.lastName}
+                      </h:column>
+                    </h:dataTable>
+
+                        </h:panelGroup>
+                    </div>
+                    
+            </div>
+        </h:form>
+    </body>
+</html>
